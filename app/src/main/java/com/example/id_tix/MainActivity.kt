@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,17 +39,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.id_tix.ui.theme.IDtixTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val authViewModel: AuthViewModel by viewModels()
         setContent {
             IDtixTheme {
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize(),
-                    topBar = {Header()}) { innerPadding ->
-                    HomePage(modifier = Modifier.padding(innerPadding))
+                    topBar = {Header(navController)}){ innerPadding ->
+//                ){ innerPadding ->
+
+                    MyAppNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel, navHostController = navController)
+//                    aslfgnawusiogbnbno
+//                    Text(text = "KONTOL", modifier = Modifier.padding(innerPadding))
+//                    HomePage(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -72,44 +84,53 @@ val filmList = listOf(
 )
 
 @Composable
-fun Header(){
+fun Header(navController: NavController){
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.background(Color(0xff1f293d)).fillMaxWidth().padding(15.dp,35.dp,15.dp,15.dp)
+        modifier = Modifier.fillMaxWidth().padding(15.dp,35.dp,15.dp,15.dp)
     ) {
         Image(
-            painter = painterResource(R.drawable.ic_launcher_logo),
+            painter = painterResource(R.drawable.ic_launcher_logo_light),
             contentDescription = "Logo",
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier
+                .size(30.dp)
+                .clickable{
+                    navController.navigate("Home")
+                }
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(R.drawable.ic_launcher_vector),
-                contentDescription = "vector",
-                modifier = Modifier.size(15.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Text(
-                text = "Now Showing",
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-        Text(text = "Profil",color = Color.White, fontWeight = FontWeight.SemiBold)
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_profile),
+            contentDescription = "Profile",
+            modifier = Modifier
+                .size(30.dp)
+                .clickable{
+                    navController.navigate("login")
+                }
+        )
     }
 }
 
 @Composable
 fun Body(props: List<FilmList>){
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Adaptive(128.dp),
         contentPadding = PaddingValues(15.dp,0.dp,15.dp,15.dp),
         verticalArrangement = Arrangement.spacedBy(30.dp),
         horizontalArrangement = Arrangement.spacedBy(30.dp)
     ) {
+        item(span = {
+            GridItemSpan(maxLineSpan)
+        }) {
+            Text(
+                text = "Now Showing",
+                style = TextStyle(
+                    fontSize = 30.sp
+                ),
+//                modifier = Modifier.padding(15.dp),
+                fontWeight = FontWeight.Bold,
+            )
+        }
         items(props) { prop ->
             Boxing(propo = prop)
         }
@@ -118,22 +139,21 @@ fun Body(props: List<FilmList>){
 
 @Composable
 fun Boxing(propo : FilmList){
-        Column {
-            Image(
-                painter = painterResource(id = propo.poster),
-                contentDescription = "poster",
-                modifier = Modifier
+    Column {
+        Image(
+            painter = painterResource(id = propo.poster),
+            contentDescription = "poster",
+            modifier = Modifier
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Surface(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = propo.title,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.SemiBold
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            Surface(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = propo.title,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
         }
-
+    }
 }
 
 @Preview(name = "Light Mode")
@@ -147,14 +167,14 @@ fun HomePage(modifier: Modifier = Modifier){
     IDtixTheme {
         Surface(modifier = modifier.fillMaxSize()) {
             Column {
-                Text(
-                    text = "Now Showing",
-                    style = TextStyle(
-                        fontSize = 30.sp
-                    ),
-                    modifier = Modifier.padding(15.dp),
-                    fontWeight = FontWeight.Bold,
-                )
+//                Text(
+//                    text = "Now Showing",
+//                    style = TextStyle(
+//                        fontSize = 30.sp
+//                    ),
+//                    modifier = Modifier.padding(15.dp),
+//                    fontWeight = FontWeight.Bold,
+//                )
                 Body(props =  filmList)
             }
         }

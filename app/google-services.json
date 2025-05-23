@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "612616406786",
+    "project_id": "id-tix",
+    "storage_bucket": "id-tix.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612616406786:android:35472892767148a813e41b",
+        "android_client_info": {
+          "package_name": "com.example.id_tix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMOtUtCZlYX6v7OAkTXOxUXD75oEy7siE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
