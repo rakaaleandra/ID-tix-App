@@ -4,11 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,14 +50,28 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.id_tix.filmList
 import com.example.id_tix.comingSoonList
 import com.example.id_tix.FilmList
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.id_tix.ui.theme.IDtixTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val authViewModel: AuthViewModel by viewModels()
         setContent {
             IDtixTheme {
-                MainScreen()
+//                 MainScreen()
+                val navController = rememberNavController()
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    topBar = {Header(navController)}){ innerPadding ->
+//                ){ innerPadding ->
+
+                    MyAppNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel, navHostController = navController)
+//                    aslfgnawusiogbnbno
+//                    Text(text = "KONTOL", modifier = Modifier.padding(innerPadding))
+//                    HomePage(modifier = Modifier.padding(innerPadding))
+                }
             }
         }
     }
@@ -100,7 +127,7 @@ fun MainScreen() {
 }
 
 @Composable
-fun Header() {
+fun Header(navController: NavController) {
     Surface(color = PrimaryDark, shadowElevation = 4.dp) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -115,6 +142,9 @@ fun Header() {
                     painter = painterResource(R.drawable.ic_launcher_logo),
                     contentDescription = "Logo",
                     modifier = Modifier.size(32.dp)
+                      .clickable{
+                        navController.navigate("Home")
+                    }
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
@@ -124,7 +154,9 @@ fun Header() {
                     fontWeight = FontWeight.Bold
                 )
             }
-            IconButton(onClick = { }) {
+            IconButton(onClick = {
+              navController.navigate("login")
+            }) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "Profile",
@@ -133,6 +165,31 @@ fun Header() {
                 )
             }
         }
+
+// fun Header(navController: NavController){
+//     Row(
+//         verticalAlignment = Alignment.CenterVertically,
+//         horizontalArrangement = Arrangement.SpaceBetween,
+//         modifier = Modifier.fillMaxWidth().padding(15.dp,35.dp,15.dp,15.dp)
+//     ) {
+//         Image(
+//             painter = painterResource(R.drawable.ic_launcher_logo_light),
+//             contentDescription = "Logo",
+//             modifier = Modifier
+//                 .size(30.dp)
+//                 .clickable{
+//                     navController.navigate("Home")
+//                 }
+//         )
+//         Image(
+//             painter = painterResource(R.drawable.ic_launcher_profile),
+//             contentDescription = "Profile",
+//             modifier = Modifier
+//                 .size(30.dp)
+//                 .clickable{
+//                     navController.navigate("login")
+//                 }
+//         )
     }
 }
 
@@ -162,6 +219,27 @@ fun FilmScreen(title: String, films: List<FilmList>, navController: NavHostContr
                     navController.navigate("film_detail/${film.id}")
                 }
             }
+// fun Body(props: List<FilmList>){
+//     LazyVerticalGrid(
+//         columns = GridCells.Adaptive(128.dp),
+//         contentPadding = PaddingValues(15.dp,0.dp,15.dp,15.dp),
+//         verticalArrangement = Arrangement.spacedBy(30.dp),
+//         horizontalArrangement = Arrangement.spacedBy(30.dp)
+//     ) {
+//         item(span = {
+//             GridItemSpan(maxLineSpan)
+//         }) {
+//             Text(
+//                 text = "Now Showing",
+//                 style = TextStyle(
+//                     fontSize = 30.sp
+//                 ),
+// //                modifier = Modifier.padding(15.dp),
+//                 fontWeight = FontWeight.Bold,
+//             )
+//         }
+//         items(props) { prop ->
+//             Boxing(propo = prop)
         }
     }
 }
@@ -201,6 +279,20 @@ fun FilmCard(film: FilmList, onClick: () -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+// fun Boxing(propo : FilmList){
+//     Column {
+//         Image(
+//             painter = painterResource(id = propo.poster),
+//             contentDescription = "poster",
+//             modifier = Modifier
+//         )
+//         Spacer(modifier = Modifier.height(10.dp))
+//         Surface(modifier = Modifier.fillMaxWidth()) {
+//             Text(
+//                 text = propo.title,
+//                 textAlign = TextAlign.Center,
+//                 fontWeight = FontWeight.SemiBold
+//             )
         }
     }
 }
@@ -247,6 +339,19 @@ fun BottomNavigationBar(navController: NavHostController) {
                         unselectedTextColor = UnselectedGray
                     )
                 )
+// fun HomePage(modifier: Modifier = Modifier){
+//     IDtixTheme {
+//         Surface(modifier = modifier.fillMaxSize()) {
+//             Column {
+// //                Text(
+// //                    text = "Now Showing",
+// //                    style = TextStyle(
+// //                        fontSize = 30.sp
+// //                    ),
+// //                    modifier = Modifier.padding(15.dp),
+// //                    fontWeight = FontWeight.Bold,
+// //                )
+//                 Body(props =  filmList)
             }
         }
     }
