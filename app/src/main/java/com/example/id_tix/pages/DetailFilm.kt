@@ -1,4 +1,4 @@
-package com.example.id_tix
+package com.example.id_tix.pages
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,12 +12,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.id_tix.FilmList
 import com.example.id_tix.ui.theme.*
 
 @Composable
@@ -107,7 +109,7 @@ fun FilmDetailScreen(film: FilmList) {
                     text = film.synopsis,
                     fontSize = 14.sp,
                     lineHeight = 20.sp,
-                    color = androidx.compose.ui.graphics.Color.Gray
+                    color = Color.Gray
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -128,7 +130,7 @@ fun DetailRow(label: String, value: String) {
         Text(
             text = value,
             fontSize = 14.sp,
-            color = androidx.compose.ui.graphics.Color.Gray
+            color = Color.Gray
         )
         Spacer(modifier = Modifier.height(8.dp))
     }

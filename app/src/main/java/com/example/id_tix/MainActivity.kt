@@ -27,8 +27,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Upcoming
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -64,13 +64,11 @@ class MainActivity : ComponentActivity() {
 //                 MainScreen()
                 val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize(),
-                    topBar = {Header(navController)}){ innerPadding ->
+                    topBar = {Header(navController)},
+                    bottomBar = {BottomNavigationBar(navController)}){ innerPadding ->
 //                ){ innerPadding ->
 
                     MyAppNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel, navHostController = navController)
-//                    aslfgnawusiogbnbno
-//                    Text(text = "KONTOL", modifier = Modifier.padding(innerPadding))
-//                    HomePage(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -83,48 +81,48 @@ data class NavItem(
     val icon: androidx.compose.ui.graphics.vector.ImageVector
 )
 
-@Composable
-fun MainScreen() {
-    val navController = rememberNavController()
-    Scaffold(
-        topBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-            if (currentRoute?.startsWith("film_detail") == true) {
-                DetailHeader(navController)
-            } else {
-                Header()
-            }
-        },
-        bottomBar = {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-            if (currentRoute?.startsWith("film_detail") != true) {
-                BottomNavigationBar(navController)
-            }
-        },
-        containerColor = BackgroundGray
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = "now_showing",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("now_showing") {
-                FilmScreen("Now Showing", filmList, navController)
-            }
-            composable("coming_soon") {
-                FilmScreen("Coming Soon", comingSoonList, navController)
-            }
-            composable("film_detail/{filmId}") { backStackEntry ->
-                val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull()
-                val allFilms = filmList + comingSoonList
-                val film = allFilms.find { it.id == filmId }
-                film?.let { FilmDetailScreen(it) }
-            }
-        }
-    }
-}
+//@Composable
+//fun MainScreen() {
+//    val navController = rememberNavController()
+//    Scaffold(
+//        topBar = {
+//            val navBackStackEntry by navController.currentBackStackEntryAsState()
+//            val currentRoute = navBackStackEntry?.destination?.route
+//            if (currentRoute?.startsWith("film_detail") == true) {
+//                DetailHeader(navController)
+//            } else {
+//                Header()
+//            }
+//        },
+//        bottomBar = {
+//            val navBackStackEntry by navController.currentBackStackEntryAsState()
+//            val currentRoute = navBackStackEntry?.destination?.route
+//            if (currentRoute?.startsWith("film_detail") != true) {
+//                BottomNavigationBar(navController)
+//            }
+//        },
+//        containerColor = BackgroundGray
+//    ) { innerPadding ->
+//        NavHost(
+//            navController = navController,
+//            startDestination = "now_showing",
+//            modifier = Modifier.padding(innerPadding)
+//        ) {
+//            composable("now_showing") {
+//                FilmScreen("Now Showing", filmList, navController)
+//            }
+//            composable("coming_soon") {
+//                FilmScreen("Coming Soon", comingSoonList, navController)
+//            }
+//            composable("film_detail/{filmId}") { backStackEntry ->
+//                val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull()
+//                val allFilms = filmList + comingSoonList
+//                val film = allFilms.find { it.id == filmId }
+//                film?.let { FilmDetailScreen(it) }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun Header(navController: NavController) {
@@ -219,27 +217,6 @@ fun FilmScreen(title: String, films: List<FilmList>, navController: NavHostContr
                     navController.navigate("film_detail/${film.id}")
                 }
             }
-// fun Body(props: List<FilmList>){
-//     LazyVerticalGrid(
-//         columns = GridCells.Adaptive(128.dp),
-//         contentPadding = PaddingValues(15.dp,0.dp,15.dp,15.dp),
-//         verticalArrangement = Arrangement.spacedBy(30.dp),
-//         horizontalArrangement = Arrangement.spacedBy(30.dp)
-//     ) {
-//         item(span = {
-//             GridItemSpan(maxLineSpan)
-//         }) {
-//             Text(
-//                 text = "Now Showing",
-//                 style = TextStyle(
-//                     fontSize = 30.sp
-//                 ),
-// //                modifier = Modifier.padding(15.dp),
-//                 fontWeight = FontWeight.Bold,
-//             )
-//         }
-//         items(props) { prop ->
-//             Boxing(propo = prop)
         }
     }
 }
@@ -279,20 +256,6 @@ fun FilmCard(film: FilmList, onClick: () -> Unit) {
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-// fun Boxing(propo : FilmList){
-//     Column {
-//         Image(
-//             painter = painterResource(id = propo.poster),
-//             contentDescription = "poster",
-//             modifier = Modifier
-//         )
-//         Spacer(modifier = Modifier.height(10.dp))
-//         Surface(modifier = Modifier.fillMaxWidth()) {
-//             Text(
-//                 text = propo.title,
-//                 textAlign = TextAlign.Center,
-//                 fontWeight = FontWeight.SemiBold
-//             )
         }
     }
 }
@@ -308,8 +271,8 @@ fun BottomNavigationBar(navController: NavHostController) {
             contentColor = PrimaryDark
         ) {
             val items = listOf(
-                NavItem("Now Showing", "now_showing", Icons.Default.Movie),
-                NavItem("Coming Soon", "coming_soon", Icons.Default.Upcoming)
+                NavItem("Now Showing", "now_showing", Icons.Default.ArrowDropDown),
+                NavItem("Coming Soon", "coming_soon", Icons.Default.DateRange)
             )
             items.forEach { item ->
                 NavigationBarItem(

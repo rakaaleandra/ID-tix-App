@@ -25,5 +25,17 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
   composable("Login"){
    LoginPage(modifier, navController,authViewModel)
   }
+  composable("now_showing") {
+   FilmScreen("Now Showing", filmList, navController)
+  }
+  composable("coming_soon") {
+   FilmScreen("Coming Soon", comingSoonList, navController)
+  }
+  composable("film_detail/{filmId}") { backStackEntry ->
+   val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull()
+   val allFilms = filmList + comingSoonList
+   val film = allFilms.find { it.id == filmId }
+   film?.let { FilmDetailScreen(it) }
+  }
  })
 }
