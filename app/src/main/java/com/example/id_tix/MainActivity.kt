@@ -52,6 +52,7 @@ import com.example.id_tix.comingSoonList
 import com.example.id_tix.FilmList
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.id_tix.pages.DetailHeader
 import com.example.id_tix.ui.theme.IDtixTheme
 
 class MainActivity : ComponentActivity() {
@@ -61,13 +62,27 @@ class MainActivity : ComponentActivity() {
         val authViewModel: AuthViewModel by viewModels()
         setContent {
             IDtixTheme {
-//                 MainScreen()
                 val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize(),
-                    topBar = {Header(navController)},
-                    bottomBar = {BottomNavigationBar(navController)}){ innerPadding ->
-//                ){ innerPadding ->
-
+                    topBar = {
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentRoute = navBackStackEntry?.destination?.route
+                        if (currentRoute?.startsWith("film_detail") == true) {
+                            DetailHeader(navController)
+                        }
+                        else if(currentRoute?.startsWith("Login") != true && currentRoute?.startsWith("Signup") != true){
+                            Header(navController)
+                        }
+                             },
+                    bottomBar = {
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val currentRoute = navBackStackEntry?.destination?.route
+                        if (currentRoute?.startsWith("film_detail") != true && currentRoute?.startsWith("Login") != true && currentRoute?.startsWith("Signup") != true) {
+                            BottomNavigationBar(navController)
+                        }
+                    },
+                    containerColor = BackgroundGray
+                ){ innerPadding ->
                     MyAppNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel, navHostController = navController)
                 }
             }
@@ -132,7 +147,7 @@ fun Header(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp)
+                .padding(horizontal = 20.dp, vertical = 6.dp)
                 .statusBarsPadding()
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -140,9 +155,9 @@ fun Header(navController: NavController) {
                     painter = painterResource(R.drawable.ic_launcher_logo),
                     contentDescription = "Logo",
                     modifier = Modifier.size(32.dp)
-                      .clickable{
-                        navController.navigate("Home")
-                    }
+//                      .clickable{
+//                        navController.navigate("now-sho")
+//                    }
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
@@ -191,74 +206,74 @@ fun Header(navController: NavController) {
     }
 }
 
-@Composable
-fun FilmScreen(title: String, films: List<FilmList>, navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BackgroundGray)
-    ) {
-        Text(
-            text = title,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = PrimaryDark,
-            modifier = Modifier.padding(start = 20.dp, top = 24.dp, bottom = 16.dp)
-        )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(films) { film ->
-                FilmCard(film) {
-                    navController.navigate("film_detail/${film.id}")
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FilmCard(film: FilmList, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(12.dp))
-            .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = White)
-    ) {
-        Column {
-            Image(
-                painter = painterResource(id = film.poster),
-                contentDescription = "Movie poster for ${film.title}",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(280.dp)
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            ) {
-                Text(
-                    text = film.title,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 14.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
-    }
-}
+//@Composable
+//fun FilmScreen(title: String, films: List<FilmList>, navController: NavHostController) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(BackgroundGray)
+//    ) {
+//        Text(
+//            text = title,
+//            fontSize = 28.sp,
+//            fontWeight = FontWeight.Bold,
+//            color = PrimaryDark,
+//            modifier = Modifier.padding(start = 20.dp, top = 24.dp, bottom = 16.dp)
+//        )
+//        LazyVerticalGrid(
+//            columns = GridCells.Fixed(2),
+//            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+//            verticalArrangement = Arrangement.spacedBy(20.dp),
+//            horizontalArrangement = Arrangement.spacedBy(16.dp),
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            items(films) { film ->
+//                FilmCard(film) {
+//                    navController.navigate("film_detail/${film.id}")
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//fun FilmCard(film: FilmList, onClick: () -> Unit) {
+//    Card(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .shadow(elevation = 4.dp, shape = RoundedCornerShape(12.dp))
+//            .clickable { onClick() },
+//        shape = RoundedCornerShape(12.dp),
+//        colors = CardDefaults.cardColors(containerColor = White)
+//    ) {
+//        Column {
+//            Image(
+//                painter = painterResource(id = film.poster),
+//                contentDescription = "Movie poster for ${film.title}",
+//                contentScale = ContentScale.Crop,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(280.dp)
+//                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
+//            )
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(12.dp)
+//            ) {
+//                Text(
+//                    text = film.title,
+//                    textAlign = TextAlign.Center,
+//                    fontWeight = FontWeight.SemiBold,
+//                    fontSize = 14.sp,
+//                    maxLines = 1,
+//                    overflow = TextOverflow.Ellipsis,
+//                    modifier = Modifier.fillMaxWidth()
+//                )
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {

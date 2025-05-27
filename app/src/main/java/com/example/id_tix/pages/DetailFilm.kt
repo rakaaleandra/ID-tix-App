@@ -29,7 +29,7 @@ fun DetailHeader(navController: NavHostController) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp)
+                .padding(horizontal = 20.dp, vertical = 6.dp)
                 .statusBarsPadding()
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
@@ -52,9 +52,9 @@ fun DetailHeader(navController: NavHostController) {
 }
 
 @Composable
-fun FilmDetailScreen(film: FilmList) {
+fun FilmDetailScreen(film: FilmList, modifier: Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(BackgroundGray)
             .verticalScroll(rememberScrollState())
