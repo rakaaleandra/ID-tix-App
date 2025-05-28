@@ -27,8 +27,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,6 +53,7 @@ import com.example.id_tix.FilmList
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.id_tix.pages.DetailHeader
+import com.example.id_tix.pages.RegistrationHeader
 import com.example.id_tix.ui.theme.IDtixTheme
 
 class MainActivity : ComponentActivity() {
@@ -70,7 +71,10 @@ class MainActivity : ComponentActivity() {
                         if (currentRoute?.startsWith("film_detail") == true) {
                             DetailHeader(navController)
                         }
-                        else if(currentRoute?.startsWith("Login") != true && currentRoute?.startsWith("Signup") != true){
+                        else if(currentRoute?.startsWith("Login") == true || currentRoute?.startsWith("Signup") == true){
+                            RegistrationHeader(navController)
+                        }
+                        else {
                             Header(navController)
                         }
                              },
@@ -286,8 +290,8 @@ fun BottomNavigationBar(navController: NavHostController) {
             contentColor = PrimaryDark
         ) {
             val items = listOf(
-                NavItem("Now Showing", "now_showing", Icons.Default.ArrowDropDown),
-                NavItem("Coming Soon", "coming_soon", Icons.Default.DateRange)
+                NavItem("Now Showing", "now_showing", Icons.Default.Movie),
+                NavItem("Coming Soon", "coming_soon", Icons.Default.Upcoming)
             )
             items.forEach { item ->
                 NavigationBarItem(

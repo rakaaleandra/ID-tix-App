@@ -52,6 +52,28 @@ fun DetailHeader(navController: NavHostController) {
 }
 
 @Composable
+fun RegistrationHeader(navController: NavHostController) {
+    Surface(color = PrimaryDark, shadowElevation = 4.dp) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 6.dp)
+                .statusBarsPadding()
+        ) {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = White,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun FilmDetailScreen(film: FilmList, modifier: Modifier) {
     Column(
         modifier = modifier
