@@ -145,35 +145,35 @@ fun FilmScreen(title: String, films: List<FilmList>, navController: NavControlle
     }
 }
 
-@Composable
-fun FilmScreen(title: String, films: List<FilmList>, navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(BackgroundGray)
-    ) {
-        Text(
-            text = title,
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = PrimaryDark,
-            modifier = Modifier.padding(start = 20.dp, top = 24.dp, bottom = 16.dp)
-        )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(films) { film ->
-                FilmCard(film) {
-                    navController.navigate("film_detail/${film.id}")
-                }
-            }
-        }
-    }
-}
+//@Composable
+//fun FilmScreen(title: String, films: List<FilmList>, navController: NavHostController) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(BackgroundGray)
+//    ) {
+//        Text(
+//            text = title,
+//            fontSize = 28.sp,
+//            fontWeight = FontWeight.Bold,
+//            color = PrimaryDark,
+//            modifier = Modifier.padding(start = 20.dp, top = 24.dp, bottom = 16.dp)
+//        )
+//        LazyVerticalGrid(
+//            columns = GridCells.Fixed(2),
+//            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+//            verticalArrangement = Arrangement.spacedBy(20.dp),
+//            horizontalArrangement = Arrangement.spacedBy(16.dp),
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            items(films) { film ->
+//                FilmCard(film) {
+//                    navController.navigate("film_detail/${film.id}")
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun FilmCard(film: FilmList, onClick: () -> Unit) {

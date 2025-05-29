@@ -6,25 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Movie
@@ -32,14 +22,12 @@ import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -47,9 +35,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.id_tix.ui.theme.*
 import androidx.compose.ui.text.font.FontWeight
-import com.example.id_tix.filmList
-import com.example.id_tix.comingSoonList
-import com.example.id_tix.FilmList
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.id_tix.pages.DetailHeader
@@ -64,30 +50,37 @@ class MainActivity : ComponentActivity() {
         setContent {
             IDtixTheme {
                 val navController = rememberNavController()
-                Scaffold(modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val currentRoute = navBackStackEntry?.destination?.route
-                        if (currentRoute?.startsWith("film_detail") == true) {
-                            DetailHeader(navController)
-                        }
-                        else if(currentRoute?.startsWith("Login") == true || currentRoute?.startsWith("Signup") == true){
-                            RegistrationHeader(navController)
-                        }
-                        else {
-                            Header(navController)
-                        }
-                             },
-                    bottomBar = {
-                        val navBackStackEntry by navController.currentBackStackEntryAsState()
-                        val currentRoute = navBackStackEntry?.destination?.route
-                        if (currentRoute?.startsWith("film_detail") != true && currentRoute?.startsWith("Login") != true && currentRoute?.startsWith("Signup") != true) {
-                            BottomNavigationBar(navController)
-                        }
-                    },
-                    containerColor = BackgroundGray
-                ){ innerPadding ->
-                    MyAppNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel, navHostController = navController)
+                var isSplashScreenVisible by remember { mutableStateOf(true) }
+                if (isSplashScreenVisible) {
+                    SplashScreen(onAnimationEnd = {
+                        isSplashScreenVisible = false
+                    })
+                } else {
+                    Scaffold(modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            val navBackStackEntry by navController.currentBackStackEntryAsState()
+                            val currentRoute = navBackStackEntry?.destination?.route
+                            if (currentRoute?.startsWith("film_detail") == true) {
+                                DetailHeader(navController)
+                            }
+                            else if(currentRoute?.startsWith("Login") == true || currentRoute?.startsWith("Signup") == true){
+                                RegistrationHeader(navController)
+                            }
+                            else {
+                                Header(navController)
+                            }
+                        },
+                        bottomBar = {
+                            val navBackStackEntry by navController.currentBackStackEntryAsState()
+                            val currentRoute = navBackStackEntry?.destination?.route
+                            if (currentRoute?.startsWith("film_detail") != true && currentRoute?.startsWith("Login") != true && currentRoute?.startsWith("Signup") != true) {
+                                BottomNavigationBar(navController)
+                            }
+                        },
+                        containerColor = BackgroundGray
+                    ){ innerPadding ->
+                        MyAppNavigation(modifier = Modifier.padding(innerPadding), authViewModel = authViewModel, navHostController = navController)
+                    }
                 }
             }
         }

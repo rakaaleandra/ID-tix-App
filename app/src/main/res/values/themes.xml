@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+<!--    <style name="Theme.MySplashScreen" parent="Theme.SplashScreen">-->
+<!--        <item name="windowSplashScreenIconBackgroundColor">@color/main_color</item>-->
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_logo</item>-->
+<!--        <item name="postSplashScreenTheme">@style/Theme.IDtix</item>-->
+<!--    </style>-->
     <style name="Theme.IDtix" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

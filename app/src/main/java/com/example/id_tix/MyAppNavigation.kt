@@ -15,12 +15,8 @@ import com.example.id_tix.pages.FilmScreen
 
 @Composable
 fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, navHostController: NavHostController){
-// val navController = rememberNavController()
  val navController = navHostController
  NavHost(navController = navController, startDestination = "now_showing", builder = {
-//  composable("Home"){
-//   HomePage(modifier, navController,authViewModel)
-//  }
   composable("Signup"){
    SignupPage(modifier, navController,authViewModel)
   }
@@ -41,3 +37,10 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
   }
  })
 }
+
+
+// val navController = rememberNavController()
+
+//  composable("Home"){
+//   HomePage(modifier, navController,authViewModel)
+//  }
