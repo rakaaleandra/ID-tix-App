@@ -6,6 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 
+data class User(
+    val email: String = "",
+    val balance: Int = 0
+)
+
 class AuthViewModel : ViewModel(){
 
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
@@ -13,8 +18,13 @@ class AuthViewModel : ViewModel(){
     private val _authState = MutableLiveData<AuthState>()
     val authState : LiveData<AuthState> = _authState
 
+    private val _user = MutableLiveData<User>()
+    val user: LiveData<User> = _user
+
     init {
         checkAuthStatus()
+        // Initialize user with default balance
+        _user.value = User(balance = 100000) // Default balance 100k
     }
 
     fun checkAuthStatus(){
@@ -37,6 +47,7 @@ class AuthViewModel : ViewModel(){
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
                     _authState.value = AuthState.Authenticated
+                    updateUserEmail(email)
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
                 }
@@ -53,6 +64,7 @@ class AuthViewModel : ViewModel(){
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
                     _authState.value = AuthState.Authenticated
+                    updateUserEmail(email)
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
                 }
@@ -62,6 +74,16 @@ class AuthViewModel : ViewModel(){
     fun signout(){
         auth.signOut()
         _authState.value = AuthState.UnAuthenticated
+    }
+
+    fun topUp(amount: Int) {
+        val currentUser = _user.value ?: User()
+        _user.value = currentUser.copy(balance = currentUser.balance + amount)
+    }
+
+    fun updateUserEmail(email: String) {
+        val currentUser = _user.value ?: User()
+        _user.value = currentUser.copy(email = email)
     }
 }
 

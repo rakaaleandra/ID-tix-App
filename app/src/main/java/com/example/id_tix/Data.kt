@@ -187,6 +187,43 @@ val comingSoonList = listOf(
     )
 )
 
+data class City(val name: String)
+
+data class Theater(
+    val id: Int,
+    val name: String,
+    val city: String,
+    val showtimes: List<String>
+)
+
+val cityList = listOf(
+    City("Pilih Kota"),
+    City("Jakarta"),
+    City("Bandung"),
+    City("Surabaya"),
+    City("Yogyakarta")
+)
+
+val theaterList = listOf(
+    // Jakarta
+    Theater(1, "CGV Central Park", "Jakarta", listOf("10:00", "13:00", "16:00", "19:00")),
+    Theater(2, "XXI Plaza Senayan", "Jakarta", listOf("11:00", "14:00", "17:00", "20:00")),
+    Theater(3, "Cinepolis Kota Kasablanka", "Jakarta", listOf("10:30", "13:30", "16:30", "19:30")),
+    Theater(4, "CGV Pacific Place", "Jakarta", listOf("11:15", "14:15", "17:15", "20:15")),
+
+    // Bandung
+    Theater(5, "CGV Paris Van Java", "Bandung", listOf("12:00", "15:00", "18:00", "21:00")),
+    Theater(6, "XXI BTC Fashion Mall", "Bandung", listOf("11:00", "14:00", "17:00", "20:00")),
+
+    // Surabaya
+    Theater(7, "XXI Tunjungan Plaza", "Surabaya", listOf("10:00", "13:30", "17:00", "20:00")),
+    Theater(8, "CGV Royal Plaza", "Surabaya", listOf("11:00", "14:00", "17:00", "20:00")),
+
+    // Yogyakarta
+    Theater(9, "Empire XXI Ambarukmo Plaza", "Yogyakarta", listOf("11:30", "14:30", "17:30", "20:30")),
+    Theater(10, "CGV Jogja City Mall", "Yogyakarta", listOf("12:00", "15:00", "18:00", "21:00"))
+)
+
 /*
 data class FilmList(
     val title: String,
