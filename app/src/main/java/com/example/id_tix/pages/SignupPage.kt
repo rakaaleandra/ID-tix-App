@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,6 +25,9 @@ import com.example.id_tix.AuthViewModel
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.example.id_tix.AuthState
 
 
@@ -41,7 +45,10 @@ fun SignupPage(modifier: Modifier = Modifier, navController: NavController, auth
 
     LaunchedEffect(authState.value) {
         when(authState.value){
-            is AuthState.Authenticated -> navController.navigate("Home")
+            is AuthState.Authenticated -> navController.navigate("profile") {
+                popUpTo("signup") { inclusive = true }
+                launchSingleTop = true
+            }
             is AuthState.Error -> Toast.makeText(context,
                 (authState.value as AuthState.Error).message,
                 Toast.LENGTH_SHORT).show()
@@ -60,30 +67,33 @@ fun SignupPage(modifier: Modifier = Modifier, navController: NavController, auth
 
         OutlinedTextField(
             value = email,
-            onValueChange = {
-                email = it
-            },
-            label = {
-                Text(text = "Email")
-            }
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            )
         )
+
         OutlinedTextField(
             value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(text = "Password")
-            }
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            authViewModel.signup(email,password)
-        },
-            enabled = authState.value != AuthState.Loading
-            ) {
-            Text(text = "Sign Up")
+        val isInputValid = email.isNotBlank() && password.isNotBlank()
+        Button(
+            onClick = { authViewModel.signup(email, password) },
+            enabled = isInputValid && authState.value != AuthState.Loading
+        ) {
+            Text("Sign Up")
         }
+
         Spacer(modifier = Modifier.height(16.dp))
         TextButton(onClick = {
             navController.navigate("login")

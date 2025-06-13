@@ -14,17 +14,23 @@ import com.example.id_tix.pages.*
 fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel, navHostController: NavHostController){
  val navController = navHostController
  NavHost(navController = navController, startDestination = "now_showing", builder = {
-  composable("Signup"){
+  composable("signup"){
    SignupPage(modifier, navController,authViewModel)
   }
-  composable("Login"){
+  composable("login"){
    LoginPage(modifier, navController,authViewModel)
+  }
+  composable("profile") {
+   ProfilePage(navController = navController, authViewModel = authViewModel, modifier = modifier)
   }
   composable("now_showing") {
    FilmScreen("Now Showing", filmList, navController, modifier)
   }
   composable("coming_soon") {
    FilmScreen("Coming Soon", comingSoonList, navController, modifier)
+  }
+  composable("topup") {
+   TopUpPage(navController = navController, authViewModel = authViewModel, modifier = modifier)
   }
   composable("film_detail/{filmId}") { backStackEntry ->
    val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull()

@@ -37,7 +37,7 @@ fun TopUpPage(
     modifier: Modifier = Modifier
 ) {
     val user by authViewModel.user.observeAsState()
-    var selectedAmount by remember { mutableStateOf(0) }
+    var selectedAmount by remember { mutableIntStateOf(0) }
     var customAmount by remember { mutableStateOf("") }
     var showSuccess by remember { mutableStateOf(false) }
 

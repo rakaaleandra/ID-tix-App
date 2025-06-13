@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -20,6 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -39,11 +43,18 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
     val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
-        when(authState.value){
-            is AuthState.Authenticated -> navController.navigate("Home")
-            is AuthState.Error -> Toast.makeText(context,
+        when(authState.value) {
+            is AuthState.Authenticated -> {
+                navController.navigate("profile") {
+                    popUpTo("login") { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+            is AuthState.Error -> Toast.makeText(
+                context,
                 (authState.value as AuthState.Error).message,
-                Toast.LENGTH_SHORT).show()
+                Toast.LENGTH_SHORT
+            ).show()
             else -> Unit
         }
     }
@@ -59,29 +70,31 @@ fun LoginPage(modifier: Modifier = Modifier, navController: NavController, authV
 
         OutlinedTextField(
             value = email,
-            onValueChange = {
-            email = it
-        },
-            label = {
-                Text(text = "Email")
-            }
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            )
         )
         OutlinedTextField(
             value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(text = "Password")
-            }
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            )
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            authViewModel.login(email,password)
-        },
-            enabled = authState.value != AuthState.Loading
-            ) {
-            Text(text = "Login")
+        val isLoginEnabled = email.isNotBlank() && password.isNotBlank() && authState.value != AuthState.Loading
+
+        Button(
+            onClick = { authViewModel.login(email, password) },
+            enabled = isLoginEnabled
+        ) {
+            Text("Login")
         }
         Spacer(modifier = Modifier.height(16.dp))
         TextButton(onClick = {

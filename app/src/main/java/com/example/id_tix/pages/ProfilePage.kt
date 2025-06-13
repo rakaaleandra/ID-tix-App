@@ -46,13 +46,20 @@ fun ProfilePage(
         NumberFormat.getCurrencyInstance(Locale("in", "ID"))
     }
 
+//    LaunchedEffect(authState) {
+//        if (authState is AuthState.UnAuthenticated) {
+//            navController.navigate("login")
+//        }
+//    }
     LaunchedEffect(authState) {
         if (authState is AuthState.UnAuthenticated) {
             navController.navigate("login") {
                 popUpTo("profile") { inclusive = true }
+                launchSingleTop = true
             }
         }
     }
+
 
     ProfilePageContent(
         user = user,
@@ -91,7 +98,6 @@ fun ProfilePageContent(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Profile Picture
                 Box(
                     modifier = Modifier
                         .size(80.dp)

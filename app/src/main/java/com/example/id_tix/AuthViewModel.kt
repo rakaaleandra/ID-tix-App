@@ -12,7 +12,6 @@ data class User(
 )
 
 class AuthViewModel : ViewModel(){
-
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _authState = MutableLiveData<AuthState>()
@@ -23,15 +22,16 @@ class AuthViewModel : ViewModel(){
 
     init {
         checkAuthStatus()
-        // Initialize user with default balance
-        _user.value = User(balance = 100000) // Default balance 100k
     }
 
     fun checkAuthStatus(){
-        if(auth.currentUser==null){
+        val currentUser = auth.currentUser
+        if (currentUser == null){
             _authState.value = AuthState.UnAuthenticated
+            _user.value = User(email = "", balance = 100000)
         } else {
             _authState.value = AuthState.Authenticated
+            _user.value = User(email = currentUser.email ?: "", balance = 100000)
         }
     }
 
@@ -47,6 +47,7 @@ class AuthViewModel : ViewModel(){
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
                     _authState.value = AuthState.Authenticated
+//                    _authState.value = AuthState.Authenticated(email)
                     updateUserEmail(email)
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
@@ -64,6 +65,7 @@ class AuthViewModel : ViewModel(){
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
                     _authState.value = AuthState.Authenticated
+//                    _authState.value = AuthState.Authenticated(email)
                     updateUserEmail(email)
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
@@ -89,6 +91,7 @@ class AuthViewModel : ViewModel(){
 
 sealed class AuthState{
     object Authenticated : AuthState()
+//    data class Authenticated(val email: String) : AuthState()
     object UnAuthenticated : AuthState()
     object Loading : AuthState()
     data class Error(val message: String) : AuthState()
