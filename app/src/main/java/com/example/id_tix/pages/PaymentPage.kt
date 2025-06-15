@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.id_tix.AuthViewModel
 import com.example.id_tix.R
 import com.example.id_tix.filmList
 import com.example.id_tix.theaterList
@@ -69,10 +71,12 @@ fun PaymentPage(
     quantity: Int,
     totalPrice: Int,
     navController: NavController,
+    authViewModel: AuthViewModel,
     modifier: Modifier = Modifier
 ) {
     val film = filmList.find { it.id == filmId } ?: filmList[0]
     val theater = theaterList.find { it.id == theaterId } ?: theaterList[0]
+    val user by authViewModel.user.observeAsState()
 
     var isProcessing by remember { mutableStateOf(false) }
 
@@ -81,8 +85,7 @@ fun PaymentPage(
         NumberFormat.getCurrencyInstance(Locale("in", "ID"))
     }
 
-    // Sample wallet balance - in real app this would come from user data
-    val walletBalance = 150000
+    val walletBalance = user?.balance ?: 0
 
     Column(
         modifier = modifier
@@ -197,7 +200,18 @@ fun PaymentPage(
             Button(
                 onClick = {
                     isProcessing = true
-                    // Simulate payment processing
+                    // Add booking to user's history
+                    authViewModel.addBooking(
+                        filmId = filmId,
+                        filmTitle = film.title,
+                        filmPoster = film.poster,
+                        theaterName = theater.name,
+                        showtime = showtime,
+                        seatSection = seatSection,
+                        quantity = quantity,
+                        totalPrice = totalPrice
+                    )
+                    // Navigate to ticket page
                     navController.navigate("ticket/$filmId/$theaterId/$showtime/$totalPrice") {
                         popUpTo("now_showing") {
                             inclusive = false
@@ -226,11 +240,10 @@ fun PaymentPage(
                 }
             }
         } else {
-            // Top Up Button (for future implementation)
+            // Top Up Button
             Button(
                 onClick = {
-                    // Navigate to top up page (to be implemented)
-                    // navController.navigate("topup")
+                    navController.navigate("topup")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -315,7 +328,8 @@ fun PaymentPagePreview() {
             seatSection = "Middle",
             quantity = 2,
             totalPrice = 100000,
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            authViewModel = AuthViewModel()
         )
     }
 }
@@ -331,7 +345,8 @@ fun PaymentPageInsufficientBalancePreview() {
             seatSection = "Middle",
             quantity = 4,
             totalPrice = 200000,
-            navController = rememberNavController()
+            navController = rememberNavController(),
+            authViewModel = AuthViewModel()
         )
     }
 }

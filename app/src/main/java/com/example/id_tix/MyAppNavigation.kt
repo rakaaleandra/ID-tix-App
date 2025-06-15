@@ -29,9 +29,6 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
   composable("coming_soon") {
    FilmScreen("Coming Soon", comingSoonList, navController, modifier)
   }
-  composable("topup") {
-   TopUpPage(navController = navController, authViewModel = authViewModel, modifier = modifier)
-  }
   composable("film_detail/{filmId}") { backStackEntry ->
    val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull()
    val allFilms = filmList + comingSoonList
@@ -55,7 +52,7 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
    val seatSection = backStackEntry.arguments?.getString("seatSection") ?: "Tengah"
    val quantity = backStackEntry.arguments?.getString("quantity")?.toIntOrNull() ?: 1
    val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toIntOrNull() ?: 50000
-   PaymentPage(filmId, theaterId, showtime, seatSection, quantity, totalPrice, navController, modifier)
+   PaymentPage(filmId, theaterId, showtime, seatSection, quantity, totalPrice, navController, authViewModel, modifier)
   }
   composable("ticket/{filmId}/{theaterId}/{showtime}/{totalPrice}") { backStackEntry ->
    val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull() ?: 1
@@ -63,6 +60,12 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
    val showtime = backStackEntry.arguments?.getString("showtime") ?: "15:10"
    val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toIntOrNull() ?: 50000
    TicketPage(filmId, theaterId, showtime, totalPrice, navController, modifier)
+  }
+  composable("history") {
+   HistoryPage(navController, authViewModel, modifier)
+  }
+  composable("topup") {
+   TopUpPage(navController, authViewModel, modifier)
   }
  })
 }

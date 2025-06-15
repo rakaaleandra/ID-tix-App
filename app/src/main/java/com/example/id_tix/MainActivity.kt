@@ -47,6 +47,9 @@ import com.example.id_tix.pages.SeatSelectionHeader
 import com.example.id_tix.pages.TicketHeader
 import com.example.id_tix.ui.theme.IDtixTheme
 import com.example.id_tix.pages.PaymentHeader
+import com.example.id_tix.pages.HistoryHeader
+import com.example.id_tix.pages.ProfileHeader
+import com.example.id_tix.pages.TopUpHeader
 import com.example.id_tix.pages.TopUpHeaderToHome
 
 class MainActivity : ComponentActivity() {
@@ -59,7 +62,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val authState by authViewModel.authState.observeAsState()
                 var isSplashScreenVisible by remember { mutableStateOf(true) }
-
                 if (isSplashScreenVisible) {
                     SplashScreen(onAnimationEnd = {
                         isSplashScreenVisible = false
@@ -79,6 +81,7 @@ class MainActivity : ComponentActivity() {
 //                            }
 //                        }
 //                    }
+
                     Scaffold(modifier = Modifier.fillMaxSize(),
                         topBar = {
                             when {
@@ -97,10 +100,19 @@ class MainActivity : ComponentActivity() {
                                 currentRoute?.startsWith("ticket") == true -> {
                                     TicketHeader(navController)
                                 }
-                                currentRoute?.startsWith("login") == true || currentRoute?.startsWith("signup") == true || currentRoute?.startsWith("profile") == true -> {
+                                currentRoute?.startsWith("login") == true ||
+                                        currentRoute?.startsWith("signup") == true -> {
                                     TopUpHeaderToHome(navController)
                                 }
-
+                                currentRoute?.startsWith("history") == true -> {
+                                    HistoryHeader(navController)
+                                }
+                                currentRoute?.startsWith("profile") == true -> {
+                                    ProfileHeader(navController)
+                                }
+                                currentRoute?.startsWith("topup") == true -> {
+                                    TopUpHeader(navController)
+                                }
                                 else -> {
                                     Header(navController)
                                 }
@@ -109,13 +121,17 @@ class MainActivity : ComponentActivity() {
                         bottomBar = {
                             val navBackStackEntry by navController.currentBackStackEntryAsState()
                             val currentRoute = navBackStackEntry?.destination?.route
-                            val hideBottomBar = currentRoute in listOf(
-                                "login", "signup", "profile"
-                            ) || currentRoute?.startsWith("film_detail") == true
-                                    || currentRoute?.startsWith("schedule") == true
-                                    || currentRoute?.startsWith("seat_selection") == true
-                                    || currentRoute?.startsWith("payment") == true
-                                    || currentRoute?.startsWith("ticket") == true
+                            val hideBottomBar = currentRoute?.startsWith("film_detail") == true ||
+                                    currentRoute?.startsWith("login") == true ||
+                                    currentRoute?.startsWith("signup") == true ||
+                                    currentRoute?.startsWith("schedule") == true ||
+                                    currentRoute?.startsWith("seat_selection") == true ||
+                                    currentRoute?.startsWith("payment") == true ||
+                                    currentRoute?.startsWith("ticket") == true ||
+                                    currentRoute?.startsWith("history") == true ||
+                                    currentRoute?.startsWith("profile") == true ||
+                                    currentRoute?.startsWith("topup") == true
+
                             if (!hideBottomBar) {
                                 BottomNavigationBar(navController)
                             }
@@ -162,6 +178,7 @@ fun Header(navController: NavController) {
                 )
             }
             IconButton(onClick = {
+//                navController.navigate("profile")
                 navController.navigate("login")
             }) {
                 Icon(

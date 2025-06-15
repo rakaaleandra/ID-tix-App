@@ -223,30 +223,3 @@ val theaterList = listOf(
     Theater(9, "Empire XXI Ambarukmo Plaza", "Yogyakarta", listOf("11:30", "14:30", "17:30", "20:30")),
     Theater(10, "CGV Jogja City Mall", "Yogyakarta", listOf("12:00", "15:00", "18:00", "21:00"))
 )
-
-/*
-data class FilmList(
-    val title: String,
-    val poster: Int
-)
-
-val filmList = listOf(
-    FilmList("Joker", R.drawable.ic_launcher_poster),
-    FilmList("Star Wars", R.drawable.ic_launcher_poster2),
-    FilmList("Blade Runner 2049", R.drawable.ic_launcher_poster3),
-    FilmList("Spiderman Far From Home", R.drawable.ic_launcher_poster4),
-    FilmList("Avengers Endgame", R.drawable.ic_launcher_poster5),
-    FilmList("La La Land", R.drawable.ic_launcher_poster6),
-    FilmList("The Grand Budapest Hotel", R.drawable.ic_launcher_poster7),
-    FilmList("Minecraft Movie", R.drawable.ic_launcher_poster8),
-    FilmList("Interstellar", R.drawable.ic_launcher_poster9),
-)
-
-val comingSoonList = listOf(
-    FilmList("Bad Genius", R.drawable.ic_launcher_poster12),
-    FilmList("Ballerina", R.drawable.ic_launcher_poster11),
-    FilmList("How to Train Your Dragon", R.drawable.ic_launcher_poster13),
-    FilmList("Mission: Impossible - The Final Reckoning", R.drawable.ic_launcher_poster10),
-    FilmList("Locked", R.drawable.ic_launcher_poster14),
-)
-*/
