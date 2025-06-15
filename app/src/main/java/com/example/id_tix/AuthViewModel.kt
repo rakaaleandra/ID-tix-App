@@ -45,25 +45,31 @@ class AuthViewModel : ViewModel(){
     private val _bookingHistory = MutableLiveData<List<BookingHistory>>()
     val bookingHistory: LiveData<List<BookingHistory>> = _bookingHistory
 
-    init {
-        checkAuthStatus()
-        // Initialize user with default balance
-        _user.value = User(balance = 100000) // Default balance 100k
-        // Initialize empty booking history
-        _bookingHistory.value = emptyList()
-    }
-
     fun checkAuthStatus(){
         val currentUser = auth.currentUser
         if(currentUser==null){
             _authState.value = AuthState.UnAuthenticated
             _user.value = User(email = "", balance = 100000)
         } else {
-            _authState.value = AuthState.Authenticated
-            _user.value = User(email = currentUser.email ?: "", balance = 100000)
-            // Load user's booking history when authenticated
-            loadUserBookingHistory()
+            val email = currentUser.email
+            if (!email.isNullOrEmpty()) {
+                _authState.value = AuthState.Authenticated
+                _user.value = User(email = email, balance = 100000)
+                loadUserBookingHistory()
+            } else {
+                // Email shouldn't be null, but just in case
+                _authState.value = AuthState.UnAuthenticated
+                _user.value = User(email = "unknown", balance = 100000)
+            }
         }
+    }
+
+    init {
+        checkAuthStatus()
+        // Initialize user with default balance
+//        _user.value = User(balance = 100000) // Default balance 100k
+        // Initialize empty booking history
+//        _bookingHistory.value = emptyList()
     }
 
     fun login(email : String,password : String){
