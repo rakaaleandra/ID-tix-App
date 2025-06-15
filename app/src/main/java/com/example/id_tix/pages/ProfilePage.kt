@@ -50,6 +50,7 @@ fun ProfilePage(
         if (authState is AuthState.UnAuthenticated) {
             navController.navigate("login") {
                 popUpTo("profile") { inclusive = true }
+                launchSingleTop = true
             }
         }
     }

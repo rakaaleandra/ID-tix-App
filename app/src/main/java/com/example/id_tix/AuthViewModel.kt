@@ -54,10 +54,13 @@ class AuthViewModel : ViewModel(){
     }
 
     fun checkAuthStatus(){
-        if(auth.currentUser==null){
+        val currentUser = auth.currentUser
+        if(currentUser==null){
             _authState.value = AuthState.UnAuthenticated
+            _user.value = User(email = "", balance = 100000)
         } else {
             _authState.value = AuthState.Authenticated
+            _user.value = User(email = currentUser.email ?: "", balance = 100000)
             // Load user's booking history when authenticated
             loadUserBookingHistory()
         }

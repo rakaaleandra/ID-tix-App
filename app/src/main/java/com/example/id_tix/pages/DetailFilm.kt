@@ -121,7 +121,7 @@ fun ProfileHeader(navController: NavController) {
                 .padding(horizontal = 20.dp, vertical = 6.dp)
                 .statusBarsPadding()
         ) {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = { navController.navigate("now_showing") }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",

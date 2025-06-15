@@ -21,7 +21,9 @@ import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,25 +50,40 @@ import com.example.id_tix.pages.PaymentHeader
 import com.example.id_tix.pages.HistoryHeader
 import com.example.id_tix.pages.ProfileHeader
 import com.example.id_tix.pages.TopUpHeader
+import com.example.id_tix.pages.TopUpHeaderToHome
 
 class MainActivity : ComponentActivity() {
+    val authViewModel: AuthViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val authViewModel: AuthViewModel by viewModels()
         setContent {
             IDtixTheme {
                 val navController = rememberNavController()
+                val authState by authViewModel.authState.observeAsState()
                 var isSplashScreenVisible by remember { mutableStateOf(true) }
                 if (isSplashScreenVisible) {
                     SplashScreen(onAnimationEnd = {
                         isSplashScreenVisible = false
                     })
                 } else {
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentRoute = navBackStackEntry?.destination?.route
+                    val isLoggedIn = authState is AuthState.Authenticated
+
+//                    LaunchedEffect(authState) {
+//                        val destination = if (isLoggedIn) "profile" else "login"
+//                        if (currentRoute != destination) {
+//                            navController.navigate(destination) {
+//                                popUpTo(navController.graph.startDestinationId) {
+//                                    inclusive = true
+//                                }
+//                            }
+//                        }
+//                    }
+
                     Scaffold(modifier = Modifier.fillMaxSize(),
                         topBar = {
-                            val navBackStackEntry by navController.currentBackStackEntryAsState()
-                            val currentRoute = navBackStackEntry?.destination?.route
                             when {
                                 currentRoute?.startsWith("film_detail") == true -> {
                                     DetailHeader(navController)
@@ -85,7 +102,7 @@ class MainActivity : ComponentActivity() {
                                 }
                                 currentRoute?.startsWith("login") == true ||
                                         currentRoute?.startsWith("signup") == true -> {
-                                    RegistrationHeader(navController)
+                                    TopUpHeaderToHome(navController)
                                 }
                                 currentRoute?.startsWith("history") == true -> {
                                     HistoryHeader(navController)
@@ -161,7 +178,8 @@ fun Header(navController: NavController) {
                 )
             }
             IconButton(onClick = {
-                navController.navigate("profile")
+//                navController.navigate("profile")
+                navController.navigate("login")
             }) {
                 Icon(
                     imageVector = Icons.Default.AccountCircle,

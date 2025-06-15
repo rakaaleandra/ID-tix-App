@@ -20,6 +20,9 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
   composable("login"){
    LoginPage(modifier, navController,authViewModel)
   }
+  composable("profile") {
+   ProfilePage(navController = navController, authViewModel = authViewModel, modifier = modifier)
+  }
   composable("now_showing") {
    FilmScreen("Now Showing", filmList, navController, modifier)
   }
@@ -60,9 +63,6 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
   }
   composable("history") {
    HistoryPage(navController, authViewModel, modifier)
-  }
-  composable("profile") {
-   ProfilePage(navController, authViewModel, modifier)
   }
   composable("topup") {
    TopUpPage(navController, authViewModel, modifier)
