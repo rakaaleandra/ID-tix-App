@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.hilt) apply false
+    id("kotlin-kapt")
 }
 
 android {
@@ -38,9 +40,18 @@ android {
     buildFeatures {
         compose = true
     }
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    kapt("com.google.dagger:hilt-compiler:2.56.2")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation ("androidx.navigation:navigation-compose:2.9.0")
     implementation("androidx.navigation:navigation-compose:2.8.9")
     implementation("androidx.compose.runtime:runtime-livedata:1.8.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
