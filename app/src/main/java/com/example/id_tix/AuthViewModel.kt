@@ -1,10 +1,17 @@
 package com.example.id_tix
 
 import android.os.Message
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.id_tix.api.EmailRequest
+import com.example.id_tix.api.LaravelApi
+import com.example.id_tix.api.LaravelUser
+import com.example.id_tix.api.TopUpRequest
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.launch
 
 data class User(
     val email: String = "",
@@ -49,12 +56,27 @@ class AuthViewModel : ViewModel(){
         val currentUser = auth.currentUser
         if(currentUser==null){
             _authState.value = AuthState.UnAuthenticated
-            _user.value = User(email = "", balance = 100000)
+            _user.value = User(email = "", balance = 0)
         } else {
             val email = currentUser.email
             if (!email.isNullOrEmpty()) {
                 _authState.value = AuthState.Authenticated
-                _user.value = User(email = email, balance = 100000)
+//                _user.value = User(email = email, balance = 100000)
+                viewModelScope.launch {
+                    try {
+                        val response = LaravelApi.api.checkUser(EmailRequest(email))
+                        if (response.isSuccessful) {
+                            val laravelUser = response.body()
+                            if (laravelUser != null) {
+                                _user.value = User(email = laravelUser.email, balance = laravelUser.saldo)
+                            }
+                        } else {
+                            Log.e("LaravelAPI", "User not found in Laravel")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("LaravelAPI", "Error fetching user from Laravel: ${e.localizedMessage}")
+                    }
+                }
                 loadUserBookingHistory()
             } else {
                 // Email shouldn't be null, but just in case
@@ -85,6 +107,24 @@ class AuthViewModel : ViewModel(){
                 if(task.isSuccessful){
                     _authState.value = AuthState.Authenticated
                     updateUserEmail(email)
+
+                    viewModelScope.launch {
+                        try {
+                            val response = LaravelApi.api.checkUser(EmailRequest(email))
+                            if (response.isSuccessful) {
+                                val laravelUser = response.body()
+                                if (laravelUser != null) {
+                                    // Update user dengan saldo dari Laravel
+                                    _user.value = User(email = laravelUser.email, balance = laravelUser.saldo)
+                                }
+                            } else {
+                                Log.e("Laravel", "User not found in Laravel API")
+                            }
+                        } catch (e: Exception) {
+                            Log.e("Laravel", "Error checking user: ${e.localizedMessage}")
+                        }
+                    }
+
                     loadUserBookingHistory()
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
@@ -104,10 +144,47 @@ class AuthViewModel : ViewModel(){
                     _authState.value = AuthState.Authenticated
                     updateUserEmail(email)
                     loadUserBookingHistory()
+                    viewModelScope.launch {
+                        try {
+                            val laravelUser = LaravelUser(
+                                name = email.substringBefore("@"),
+                                email = email,
+                                saldo = 0
+                            )
+                            val response = LaravelApi.api.createUser(laravelUser)
+                            if (response.isSuccessful) {
+                                Log.d("Laravel", "User created in Laravel API")
+                            } else {
+                                Log.e("Laravel", "Failed to create user: ${response.code()}")
+                            }
+                        } catch (e: Exception) {
+                            Log.e("Laravel", "Error: ${e.localizedMessage}")
+                        }
+                    }
                 } else {
                     _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
                 }
             }
+    }
+
+    fun topUp(amount: Int) {
+        viewModelScope.launch {
+            try {
+                val email = user.value?.email ?: return@launch
+                val response = LaravelApi.api.topUpSaldo(TopUpRequest(email, amount))
+                if (response.isSuccessful) {
+                    response.body()?.let { laravelUser ->
+//                        _user.value = User(email = laravelUser.email, balance = laravelUser.saldo)
+                        val currentUser = _user.value ?: User()
+                        _user.value = currentUser.copy(balance = currentUser.balance + amount)
+                    }
+                } else {
+                    Log.e("TopUp", "Top up failed: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.e("TopUp", "Top up error: ${e.localizedMessage}")
+            }
+        }
     }
 
     fun signout(){
@@ -116,10 +193,10 @@ class AuthViewModel : ViewModel(){
         _bookingHistory.value = emptyList() // Clear booking history on logout
     }
 
-    fun topUp(amount: Int) {
-        val currentUser = _user.value ?: User()
-        _user.value = currentUser.copy(balance = currentUser.balance + amount)
-    }
+//    fun topUp(amount: Int) {
+//        val currentUser = _user.value ?: User()
+//        _user.value = currentUser.copy(balance = currentUser.balance + amount)
+//    }
 
     fun updateUserEmail(email: String) {
         val currentUser = _user.value ?: User()
