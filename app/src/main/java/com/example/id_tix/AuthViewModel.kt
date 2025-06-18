@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.id_tix.api.EmailRequest
 import com.example.id_tix.api.LaravelApi
 import com.example.id_tix.api.LaravelUser
+import com.example.id_tix.api.PemesananRequest
 import com.example.id_tix.api.TopUpRequest
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
@@ -39,12 +40,12 @@ enum class BookingStatus {
     UPCOMING
 }
 
-class AuthViewModel : ViewModel(){
+class AuthViewModel : ViewModel() {
 
-    private val auth : FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val _authState = MutableLiveData<AuthState>()
-    val authState : LiveData<AuthState> = _authState
+    val authState: LiveData<AuthState> = _authState
 
     private val _user = MutableLiveData<User>()
     val user: LiveData<User> = _user
@@ -52,9 +53,9 @@ class AuthViewModel : ViewModel(){
     private val _bookingHistory = MutableLiveData<List<BookingHistory>>()
     val bookingHistory: LiveData<List<BookingHistory>> = _bookingHistory
 
-    fun checkAuthStatus(){
+    fun checkAuthStatus() {
         val currentUser = auth.currentUser
-        if(currentUser==null){
+        if (currentUser == null) {
             _authState.value = AuthState.UnAuthenticated
             _user.value = User(email = "", balance = 0)
         } else {
@@ -68,16 +69,20 @@ class AuthViewModel : ViewModel(){
                         if (response.isSuccessful) {
                             val laravelUser = response.body()
                             if (laravelUser != null) {
-                                _user.value = User(email = laravelUser.email, balance = laravelUser.saldo)
+                                _user.value =
+                                    User(email = laravelUser.email, balance = laravelUser.saldo)
+                                loadUserBookingHistory()
                             }
                         } else {
                             Log.e("LaravelAPI", "User not found in Laravel")
                         }
                     } catch (e: Exception) {
-                        Log.e("LaravelAPI", "Error fetching user from Laravel: ${e.localizedMessage}")
+                        Log.e(
+                            "LaravelAPI",
+                            "Error fetching user from Laravel: ${e.localizedMessage}"
+                        )
                     }
                 }
-                loadUserBookingHistory()
             } else {
                 // Email shouldn't be null, but just in case
                 _authState.value = AuthState.UnAuthenticated
@@ -88,15 +93,11 @@ class AuthViewModel : ViewModel(){
 
     init {
         checkAuthStatus()
-        // Initialize user with default balance
-//        _user.value = User(balance = 100000) // Default balance 100k
-        // Initialize empty booking history
-//        _bookingHistory.value = emptyList()
     }
 
-    fun login(email : String,password : String){
+    fun login(email: String, password: String) {
 
-        if(email.isEmpty() || password.isEmpty()){
+        if (email.isEmpty() || password.isEmpty()) {
             _authState.value = AuthState.Error("Email or Password can't be empty")
             return
         }
@@ -104,7 +105,7 @@ class AuthViewModel : ViewModel(){
         _authState.value = AuthState.Loading
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if(task.isSuccessful){
+                if (task.isSuccessful) {
                     _authState.value = AuthState.Authenticated
                     updateUserEmail(email)
 
@@ -116,6 +117,7 @@ class AuthViewModel : ViewModel(){
                                 if (laravelUser != null) {
                                     // Update user dengan saldo dari Laravel
                                     _user.value = User(email = laravelUser.email, balance = laravelUser.saldo)
+                                    loadUserBookingHistory()
                                 }
                             } else {
                                 Log.e("Laravel", "User not found in Laravel API")
@@ -124,26 +126,24 @@ class AuthViewModel : ViewModel(){
                             Log.e("Laravel", "Error checking user: ${e.localizedMessage}")
                         }
                     }
-
-                    loadUserBookingHistory()
                 } else {
-                    _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
+                    _authState.value =
+                        AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
             }
     }
 
-    fun signup(email : String,password : String){
-        if(email.isEmpty() || password.isEmpty()){
+    fun signup(email: String, password: String) {
+        if (email.isEmpty() || password.isEmpty()) {
             _authState.value = AuthState.Error("Email or Password can't be empty")
             return
         }
         _authState.value = AuthState.Loading
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if(task.isSuccessful){
+                if (task.isSuccessful) {
                     _authState.value = AuthState.Authenticated
                     updateUserEmail(email)
-                    loadUserBookingHistory()
                     viewModelScope.launch {
                         try {
                             val laravelUser = LaravelUser(
@@ -162,7 +162,8 @@ class AuthViewModel : ViewModel(){
                         }
                     }
                 } else {
-                    _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
+                    _authState.value =
+                        AuthState.Error(task.exception?.message ?: "Something went wrong")
                 }
             }
     }
@@ -187,16 +188,11 @@ class AuthViewModel : ViewModel(){
         }
     }
 
-    fun signout(){
+    fun signout() {
         auth.signOut()
         _authState.value = AuthState.UnAuthenticated
         _bookingHistory.value = emptyList() // Clear booking history on logout
     }
-
-//    fun topUp(amount: Int) {
-//        val currentUser = _user.value ?: User()
-//        _user.value = currentUser.copy(balance = currentUser.balance + amount)
-//    }
 
     fun updateUserEmail(email: String) {
         val currentUser = _user.value ?: User()
@@ -215,95 +211,100 @@ class AuthViewModel : ViewModel(){
     ) {
         val currentUser = _user.value
         if (currentUser != null && currentUser.email.isNotEmpty()) {
-            val currentHistory = _bookingHistory.value ?: emptyList()
-            val newBooking = BookingHistory(
-                id = (currentHistory.maxOfOrNull { it.id } ?: 0) + 1,
-                userId = currentUser.email,
+            val bookingDate =
+                java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+                    .format(java.util.Date())
+
+            val pemesananRequest = PemesananRequest(
+                email = currentUser.email,
                 filmId = filmId,
-                filmTitle = filmTitle,
+                namaFilm = filmTitle,
                 filmPoster = filmPoster,
-                theaterName = theaterName,
-                showtime = showtime,
-                bookingDate = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date()),
-                seatSection = seatSection,
-                quantity = quantity,
-                totalPrice = totalPrice,
-                status = BookingStatus.UPCOMING
+                namaBioskop = theaterName,
+                jadwalTayang = showtime,
+                kursi = seatSection,
+                jumlahKursi = quantity,
+                tanggalPemesanan = bookingDate,
+                statusPemesanan = "berhasil", // atau "null" jika belum dikonfirmasi
+                feedback = null,
+                totalBayar = totalPrice
             )
 
-            _bookingHistory.value = currentHistory + newBooking
+            viewModelScope.launch {
+                try {
+                    val response = LaravelApi.api.inputPemesanan(pemesananRequest)
+                    if (response.isSuccessful) {
+                        // Tambahkan ke local history jika API sukses
+                        val currentHistory = _bookingHistory.value ?: emptyList()
+                        val newBooking = BookingHistory(
+                            id = (currentHistory.maxOfOrNull { it.id } ?: 0) + 1,
+                            userId = currentUser.email,
+                            filmId = filmId,
+                            filmTitle = filmTitle,
+                            filmPoster = filmPoster,
+                            theaterName = theaterName,
+                            showtime = showtime,
+                            bookingDate = bookingDate,
+                            seatSection = seatSection,
+                            quantity = quantity,
+                            totalPrice = totalPrice,
+                            status = BookingStatus.UPCOMING
+                        )
+                        _bookingHistory.value = currentHistory + newBooking
 
-            // Deduct balance
-            _user.value = currentUser.copy(balance = currentUser.balance - totalPrice)
+                        // Kurangi saldo user
+                        _user.value = currentUser.copy(balance = currentUser.balance - totalPrice)
+
+                        // Opsional: log atau tampilkan notifikasi sukses
+                    } else {
+                        // Tangani error dari API
+                        Log.e("Booking", "API gagal: ${response.errorBody()?.string()}")
+                    }
+                } catch (e: Exception) {
+                    Log.e("Booking", "Exception: ${e.localizedMessage}")
+                }
+            }
         }
     }
 
-    private fun loadUserBookingHistory() {
+    fun loadUserBookingHistory() {
         val currentUser = _user.value
         if (currentUser != null && currentUser.email.isNotEmpty()) {
-            // In a real app, this would load from a database
-            // For demo purposes, we'll load sample data only for specific users
-            val userBookings = when (currentUser.email) {
-                "demo@example.com" -> getSampleBookingsForUser(currentUser.email)
-                "test@example.com" -> getSampleBookingsForUser(currentUser.email)
-                else -> emptyList()
+            viewModelScope.launch {
+                try {
+                    val response = LaravelApi.api.getUserBookings(EmailRequest(currentUser.email))
+                    if (response.isSuccessful) {
+                        val data = response.body() ?: emptyList()
+                        _bookingHistory.value = data.mapIndexed { index, pemesanan ->
+                            BookingHistory(
+                                id = index + 1,
+                                userId = pemesanan.email,
+                                filmId = pemesanan.filmId,
+                                filmTitle = pemesanan.namaFilm,
+                                filmPoster = pemesanan.filmPoster,
+                                theaterName = pemesanan.namaBioskop,
+                                showtime = pemesanan.jadwalTayang,
+                                bookingDate = pemesanan.tanggalPemesanan,
+                                seatSection = pemesanan.kursi,
+                                quantity = pemesanan.jumlahKursi,
+                                totalPrice = pemesanan.totalBayar,
+                                status = when (pemesanan.statusPemesanan.lowercase()) {
+                                    "berhasil" -> BookingStatus.UPCOMING
+                                    else -> BookingStatus.CANCELLED
+                                }
+                            )
+                        }
+                    } else {
+                        Log.e("Booking", "Gagal memuat riwayat: ${response.errorBody()?.string()}")
+                        _bookingHistory.value = emptyList()
+                    }
+                } catch (e: Exception) {
+                    Log.e("Booking", "Error: ${e.localizedMessage}")
+                    _bookingHistory.value = emptyList()
+                }
             }
-            _bookingHistory.value = userBookings
         } else {
             _bookingHistory.value = emptyList()
-        }
-    }
-
-    private fun getSampleBookingsForUser(userEmail: String): List<BookingHistory> {
-        // Sample bookings for demo users
-        return when (userEmail) {
-            "demo@example.com" -> listOf(
-                BookingHistory(
-                    id = 1,
-                    userId = userEmail,
-                    filmId = 1,
-                    filmTitle = "Joker",
-                    filmPoster = R.drawable.ic_launcher_poster,
-                    theaterName = "CGV Central Park",
-                    showtime = "19:00",
-                    bookingDate = "2024-01-15",
-                    seatSection = "Middle",
-                    quantity = 2,
-                    totalPrice = 100000,
-                    status = BookingStatus.COMPLETED
-                ),
-                BookingHistory(
-                    id = 2,
-                    userId = userEmail,
-                    filmId = 5,
-                    filmTitle = "Avengers Endgame",
-                    filmPoster = R.drawable.ic_launcher_poster5,
-                    theaterName = "XXI Plaza Senayan",
-                    showtime = "20:00",
-                    bookingDate = "2024-01-10",
-                    seatSection = "Back",
-                    quantity = 1,
-                    totalPrice = 50000,
-                    status = BookingStatus.COMPLETED
-                )
-            )
-            "test@example.com" -> listOf(
-                BookingHistory(
-                    id = 3,
-                    userId = userEmail,
-                    filmId = 9,
-                    filmTitle = "Interstellar",
-                    filmPoster = R.drawable.ic_launcher_poster9,
-                    theaterName = "CGV Pacific Place",
-                    showtime = "14:15",
-                    bookingDate = "2024-01-20",
-                    seatSection = "Middle",
-                    quantity = 2,
-                    totalPrice = 100000,
-                    status = BookingStatus.UPCOMING
-                )
-            )
-            else -> emptyList()
         }
     }
 }
