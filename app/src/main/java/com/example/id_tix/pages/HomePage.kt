@@ -160,7 +160,8 @@ fun FilmCardPreview() {
                 productionCompany = "Warner Bros. Pictures",
                 casts = "Joaquin Phoenix, Robert De Niro",
                 synopsis = "Sample synopsis",
-                poster = R.drawable.ic_launcher_poster
+                poster = R.drawable.ic_launcher_poster,
+                tayang = true
             ),
             onClick = { }
         )

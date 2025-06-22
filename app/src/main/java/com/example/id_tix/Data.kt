@@ -10,7 +10,8 @@ data class FilmList(
     val productionCompany: String,
     val casts: String,
     val synopsis: String,
-    val poster: Int
+    val poster: Int,
+    val tayang: Boolean
 )
 
 val filmList = listOf(
@@ -24,7 +25,8 @@ val filmList = listOf(
         productionCompany = "Warner Bros. Pictures",
         casts = "Joaquin Phoenix, Robert De Niro, Zazie Beetz",
         synopsis = "In Gotham City, Arthur Fleck, a mentally troubled comedian, is disregarded and mistreated by society. He begins a slow descent into madness and transforms into the criminal mastermind known as the Joker.",
-        poster = R.drawable.ic_launcher_poster
+        poster = R.drawable.ic_launcher_poster,
+        tayang = true
     ),
     FilmList(
         id = 2,
@@ -36,7 +38,8 @@ val filmList = listOf(
         productionCompany = "Lucasfilm",
         casts = "Mark Hamill, Harrison Ford, Carrie Fisher",
         synopsis = "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee, and two droids to save the galaxy from the Empire's world-destroying battle station.",
-        poster = R.drawable.ic_launcher_poster2
+        poster = R.drawable.ic_launcher_poster2,
+        tayang = true
     ),
     FilmList(
         id = 3,
@@ -48,7 +51,8 @@ val filmList = listOf(
         productionCompany = "Warner Bros. Pictures",
         casts = "Ryan Gosling, Harrison Ford, Ana de Armas",
         synopsis = "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard, who's been missing for thirty years.",
-        poster = R.drawable.ic_launcher_poster3
+        poster = R.drawable.ic_launcher_poster3,
+        tayang = true
     ),
     FilmList(
         id = 4,
@@ -60,7 +64,8 @@ val filmList = listOf(
         productionCompany = "Marvel Studios",
         casts = "Tom Holland, Samuel L. Jackson, Jake Gyllenhaal",
         synopsis = "Peter Parker's European vacation takes an unexpected turn when he reluctantly agrees to help Nick Fury uncover the mystery of elemental creature attacks.",
-        poster = R.drawable.ic_launcher_poster4
+        poster = R.drawable.ic_launcher_poster4,
+        tayang = true
     ),
     FilmList(
         id = 5,
@@ -72,7 +77,8 @@ val filmList = listOf(
         productionCompany = "Marvel Studios",
         casts = "Robert Downey Jr., Chris Evans, Mark Ruffalo, Scarlett Johansson",
         synopsis = "After the devastating events of Infinity War, the Avengers assemble once more to reverse Thanos' actions and restore balance to the universe.",
-        poster = R.drawable.ic_launcher_poster5
+        poster = R.drawable.ic_launcher_poster5,
+        tayang = true
     ),
     FilmList(
         id = 6,
@@ -84,7 +90,8 @@ val filmList = listOf(
         productionCompany = "Summit Entertainment",
         casts = "Ryan Gosling, Emma Stone, John Legend",
         synopsis = "While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.",
-        poster = R.drawable.ic_launcher_poster6
+        poster = R.drawable.ic_launcher_poster6,
+        tayang = true
     ),
     FilmList(
         id = 7,
@@ -96,7 +103,8 @@ val filmList = listOf(
         productionCompany = "Fox Searchlight Pictures",
         casts = "Ralph Fiennes, Tony Revolori, Adrien Brody",
         synopsis = "A writer encounters the owner of an aging high-class hotel, who tells him of his early years serving as a lobby boy in the hotel's glorious years.",
-        poster = R.drawable.ic_launcher_poster7
+        poster = R.drawable.ic_launcher_poster7,
+        tayang = true
     ),
     FilmList(
         id = 8,
@@ -108,7 +116,8 @@ val filmList = listOf(
         productionCompany = "Warner Bros. Pictures",
         casts = "Jason Momoa, Danielle Brooks",
         synopsis = "A teenage girl and her unlikely group of adventurers must save their blocky Overworld from the destructive Ender Dragon.",
-        poster = R.drawable.ic_launcher_poster8
+        poster = R.drawable.ic_launcher_poster8,
+        tayang = true
     ),
     FilmList(
         id = 9,
@@ -120,7 +129,8 @@ val filmList = listOf(
         productionCompany = "Paramount Pictures",
         casts = "Matthew McConaughey, Anne Hathaway, Jessica Chastain",
         synopsis = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival as Earth becomes uninhabitable.",
-        poster = R.drawable.ic_launcher_poster9
+        poster = R.drawable.ic_launcher_poster9,
+        tayang = true
     )
 )
 
@@ -135,7 +145,8 @@ val comingSoonList = listOf(
         productionCompany = "Vertical Entertainment",
         casts = "Callina Liang, Benedict Wong, Jabari Banks",
         synopsis = "A group of senior high school students, trying to remove the cheating system of new student admissions at a famous university.",
-        poster = R.drawable.ic_launcher_poster12
+        poster = R.drawable.ic_launcher_poster12,
+        tayang = false
     ),
     FilmList(
         id = 11,
@@ -147,7 +158,8 @@ val comingSoonList = listOf(
         productionCompany = "Lionsgate",
         casts = "Ana de Armas, Keanu Reeves, Ian McShane",
         synopsis = "Eve (Ana de Armas) a trained assassin in the tradition of the Roman Ruska organization set out for revenge after her father's death.",
-        poster = R.drawable.ic_launcher_poster11
+        poster = R.drawable.ic_launcher_poster11,
+        tayang = false
     ),
     FilmList(
         id = 12,
@@ -159,7 +171,8 @@ val comingSoonList = listOf(
         productionCompany = "Universal Pictures",
         casts = "Nico Parker, Gerard Butler",
         synopsis = "When an ancient threat threatens the Vikings on the island of Berk, the friendship between Hiccup (Mason Thames), an innovative Viking, and Toothless, a Night Fury dragon, becomes the key for both species to make a new future together.",
-        poster = R.drawable.ic_launcher_poster13
+        poster = R.drawable.ic_launcher_poster13,
+        tayang = false
     ),
     FilmList(
         id = 13,
@@ -171,7 +184,8 @@ val comingSoonList = listOf(
         productionCompany = "Paramount Pictures",
         casts = "Tom Cruise, Hayley Atwell, Ving Rhames",
         synopsis = "Continuing the story from the previous film, Mission: Impossible - Dead Reckoning Part One. Ethan Hunt (Tom Cruise) will return to continue the mission to destroy old enemies and new enemies that are more dangerous.",
-        poster = R.drawable.ic_launcher_poster10
+        poster = R.drawable.ic_launcher_poster10,
+        tayang = false
     ),
     FilmList(
         id = 14,
@@ -183,7 +197,8 @@ val comingSoonList = listOf(
         productionCompany = "The Avenue Entertainment",
         casts = "Bill Skarsgard, Anthony Hopkins, Gabriella Waish",
         synopsis = "Eddie Barrish (Bill Skarsgard) is a thief who tries to break into a luxury SUV. What he doesn't know is that he has fallen into a dangerous psychological game made by William (Anthony Hopkins) the owner of the car.",
-        poster = R.drawable.ic_launcher_poster14
+        poster = R.drawable.ic_launcher_poster14,
+        tayang = false
     )
 )
 
