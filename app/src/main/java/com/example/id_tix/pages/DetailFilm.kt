@@ -255,19 +255,42 @@ fun FilmDetailScreen(film: FilmList, navController: NavController, modifier: Mod
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Book Tickets Button
-                Button(
-                    onClick = { navController.navigate("schedule/${film.id}") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = PrimaryDark),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Text(
-                        text = "Book Tickets",
-                        color = White,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
+                if (film.tayang) {
+                    // Show "Book Tickets" button for Now Showing films
+                    Button(
+                        onClick = { navController.navigate("schedule/${film.id}") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryDark),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "Book Tickets",
+                            color = White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                } else {
+                    // Show "Coming Soon" button for upcoming films (disabled)
+                    Button(
+                        onClick = { /* No action for coming soon films */ },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = false,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Gray,
+                            disabledContainerColor = Color.Gray
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = "Coming Soon",
+                            color = White,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
                 }
             }
         }
