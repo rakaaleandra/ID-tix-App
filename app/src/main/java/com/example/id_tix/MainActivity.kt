@@ -113,6 +113,9 @@ class MainActivity : ComponentActivity() {
                                 currentRoute?.startsWith("topup") == true -> {
                                     TopUpHeader(navController)
                                 }
+                                currentRoute?.startsWith("sukses") == true -> {
+
+                                }
                                 else -> {
                                     Header(navController)
                                 }
@@ -130,7 +133,8 @@ class MainActivity : ComponentActivity() {
                                     currentRoute?.startsWith("ticket") == true ||
                                     currentRoute?.startsWith("history") == true ||
                                     currentRoute?.startsWith("profile") == true ||
-                                    currentRoute?.startsWith("topup") == true
+                                    currentRoute?.startsWith("topup") == true ||
+                                    currentRoute?.startsWith("sukses") == true
 
                             if (!hideBottomBar) {
                                 BottomNavigationBar(navController)

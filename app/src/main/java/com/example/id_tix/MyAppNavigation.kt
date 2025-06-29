@@ -54,18 +54,29 @@ fun MyAppNavigation(modifier: Modifier = Modifier, authViewModel: AuthViewModel,
    val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toIntOrNull() ?: 50000
    PaymentPage(filmId, theaterId, showtime, seatSection, quantity, totalPrice, navController, authViewModel, modifier)
   }
-  composable("ticket/{filmId}/{theaterId}/{showtime}/{totalPrice}") { backStackEntry ->
-   val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull() ?: 1
-   val theaterId = backStackEntry.arguments?.getString("theaterId")?.toIntOrNull() ?: 1
-   val showtime = backStackEntry.arguments?.getString("showtime") ?: "15:10"
-   val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toIntOrNull() ?: 50000
-   TicketPage(filmId, theaterId, showtime, totalPrice, navController, modifier)
+  composable("ticket/{codePemesanan}") { backStackEntry ->
+//   val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull() ?: 1
+//   val theaterName = backStackEntry.arguments?.getString("theaterName") ?: "CGV Central Park"
+//   val showtime = backStackEntry.arguments?.getString("showtime") ?: "15:10"
+//   val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toIntOrNull() ?: 50000
+   val codePemesanan = backStackEntry.arguments?.getString("codePemesanan") ?: "error"
+   TicketPage(codePemesanan,authViewModel , navController, modifier)
   }
+//  composable("ticket/{filmId}/{theaterName}/{showtime}/{totalPrice}") { backStackEntry ->
+//   val filmId = backStackEntry.arguments?.getString("filmId")?.toIntOrNull() ?: 1
+//   val theaterName = backStackEntry.arguments?.getString("theaterName") ?: "CGV Central Park"
+//   val showtime = backStackEntry.arguments?.getString("showtime") ?: "15:10"
+//   val totalPrice = backStackEntry.arguments?.getString("totalPrice")?.toIntOrNull() ?: 50000
+//   TicketPage(filmId, theaterName, showtime, totalPrice, navController, modifier)
+//  }
   composable("history") {
    HistoryPage(navController, authViewModel, modifier)
   }
   composable("topup") {
    TopUpPage(navController, authViewModel, modifier)
+  }
+  composable("sukses") {
+   SuksesBayar(navController, modifier)
   }
  })
 }

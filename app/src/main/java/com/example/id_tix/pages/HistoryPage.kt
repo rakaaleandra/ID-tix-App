@@ -111,7 +111,8 @@ fun HistoryPage(
                         onCardClick = {
                             // Navigate to ticket detail or film detail
                             if (booking.status == BookingStatus.UPCOMING) {
-                                navController.navigate("ticket/${booking.filmId}/1/${booking.showtime}/${booking.totalPrice}")
+//                                navController.navigate("ticket/${booking.filmId}/${booking.theaterName}/${booking.showtime}/${booking.totalPrice}")
+                                navController.navigate("ticket/${booking.codePemesanan}")
                             } else {
                                 navController.navigate("film_detail/${booking.filmId}")
                             }
@@ -208,7 +209,7 @@ fun BookingHistoryCard(
                 contentDescription = "Movie poster for ${booking.filmTitle}",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(80.dp, 120.dp)
+                    .size(90.dp, 130.dp)
                     .clip(RoundedCornerShape(8.dp))
             )
 

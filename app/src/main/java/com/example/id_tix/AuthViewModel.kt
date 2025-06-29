@@ -31,7 +31,8 @@ data class BookingHistory(
     val seatSection: String,
     val quantity: Int,
     val totalPrice: Int,
-    val status: BookingStatus
+    val status: BookingStatus,
+    val codePemesanan: String? = null
 )
 
 enum class BookingStatus {
@@ -234,6 +235,8 @@ class AuthViewModel : ViewModel() {
                 try {
                     val response = LaravelApi.api.inputPemesanan(pemesananRequest)
                     if (response.isSuccessful) {
+                        val codePemesanan = response.body()?.data?.codePemesanan
+                        Log.d("Booking", "Kode Pemesanan: $codePemesanan")
                         // Tambahkan ke local history jika API sukses
                         val currentHistory = _bookingHistory.value ?: emptyList()
                         val newBooking = BookingHistory(
@@ -248,7 +251,8 @@ class AuthViewModel : ViewModel() {
                             seatSection = seatSection,
                             quantity = quantity,
                             totalPrice = totalPrice,
-                            status = BookingStatus.UPCOMING
+                            status = BookingStatus.UPCOMING,
+                            codePemesanan = codePemesanan
                         )
                         _bookingHistory.value = currentHistory + newBooking
 
@@ -258,7 +262,7 @@ class AuthViewModel : ViewModel() {
                         // Opsional: log atau tampilkan notifikasi sukses
                     } else {
                         // Tangani error dari API
-                        Log.e("Booking", "API gagal: ${response.errorBody()?.string()}")
+                        Log.e("Booking", "API gagal")
                     }
                 } catch (e: Exception) {
                     Log.e("Booking", "Exception: ${e.localizedMessage}")
@@ -288,6 +292,7 @@ class AuthViewModel : ViewModel() {
                                 seatSection = pemesanan.kursi,
                                 quantity = pemesanan.jumlahKursi,
                                 totalPrice = pemesanan.totalBayar,
+                                codePemesanan = pemesanan.codePemesanan,
                                 status = when (pemesanan.statusPemesanan.lowercase()) {
                                     "berhasil" -> BookingStatus.UPCOMING
                                     else -> BookingStatus.CANCELLED

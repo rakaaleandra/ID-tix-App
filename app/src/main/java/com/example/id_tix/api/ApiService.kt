@@ -22,7 +22,7 @@ interface LaravelApiService {
     suspend fun inputPemesanan(@Body pemesananRequest: PemesananRequest): Response<PemesananResponse>
 
     @POST("pemesanan_check")
-    suspend fun getUserBookings(@Body emailRequest: EmailRequest): Response<List<PemesananRequest>>
+    suspend fun getUserBookings(@Body emailRequest: EmailRequest): Response<List<PemesananData>>
 }
 
 data class LaravelUser(
@@ -41,9 +41,24 @@ data class EmailRequest(val email: String)
 data class PemesananResponse(
     val success: Boolean,
     val message: String,
-    val data: PemesananRequest? // atau bisa pakai Any jika tak pasti
+    val data: PemesananData?
 )
 
+data class PemesananData(
+    val email: String,
+    val filmId: Int,
+    val namaFilm: String,
+    val filmPoster: Int,
+    val namaBioskop: String,
+    val jadwalTayang: String,
+    val kursi: String,
+    val jumlahKursi: Int,
+    val codePemesanan: String,
+    val tanggalPemesanan: String,
+    val statusPemesanan: String,
+    val feedback: String?,
+    val totalBayar: Int
+)
 
 data class PemesananRequest(
     val email: String,

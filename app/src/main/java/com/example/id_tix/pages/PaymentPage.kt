@@ -212,11 +212,12 @@ fun PaymentPage(
                         totalPrice = totalPrice
                     )
                     // Navigate to ticket page
-                    navController.navigate("ticket/$filmId/$theaterId/$showtime/$totalPrice") {
-                        popUpTo("now_showing") {
-                            inclusive = false
-                        }
-                    }
+                    navController.navigate("sukses")
+//                    navController.navigate("ticket/$filmId/${theater.name}/$showtime/$totalPrice") {
+//                        popUpTo("now_showing") {
+//                            inclusive = false
+//                        }
+//                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
