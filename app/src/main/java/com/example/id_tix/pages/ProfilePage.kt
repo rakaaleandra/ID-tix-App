@@ -200,20 +200,6 @@ fun ProfilePageContent(
                 subtitle = "Lihat riwayat pembelian tiket",
                 onClick = onHistoryClick
             )
-
-            ProfileMenuItem(
-                icon = Icons.Default.Settings,
-                title = "Pengaturan",
-                subtitle = "Kelola akun dan preferensi",
-                onClick = { /* TODO: Navigate to settings */ }
-            )
-
-            ProfileMenuItem(
-                icon = Icons.AutoMirrored.Filled.Help,
-                title = "Bantuan",
-                subtitle = "FAQ dan dukungan pelanggan",
-                onClick = { /* TODO: Navigate to help */ }
-            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
