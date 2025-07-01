@@ -60,7 +60,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             IDtixTheme {
                 val navController = rememberNavController()
-                val authState by authViewModel.authState.observeAsState()
                 var isSplashScreenVisible by remember { mutableStateOf(true) }
                 if (isSplashScreenVisible) {
                     SplashScreen(onAnimationEnd = {
@@ -69,18 +68,6 @@ class MainActivity : ComponentActivity() {
                 } else {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute = navBackStackEntry?.destination?.route
-                    val isLoggedIn = authState is AuthState.Authenticated
-
-//                    LaunchedEffect(authState) {
-//                        val destination = if (isLoggedIn) "profile" else "login"
-//                        if (currentRoute != destination) {
-//                            navController.navigate(destination) {
-//                                popUpTo(navController.graph.startDestinationId) {
-//                                    inclusive = true
-//                                }
-//                            }
-//                        }
-//                    }
 
                     Scaffold(modifier = Modifier.fillMaxSize(),
                         topBar = {
@@ -114,7 +101,7 @@ class MainActivity : ComponentActivity() {
                                     TopUpHeader(navController)
                                 }
                                 currentRoute?.startsWith("sukses") == true -> {
-
+                                    BlankHeader()
                                 }
                                 else -> {
                                     Header(navController)
@@ -127,18 +114,23 @@ class MainActivity : ComponentActivity() {
                             val hideBottomBar = currentRoute?.startsWith("film_detail") == true ||
                                     currentRoute?.startsWith("login") == true ||
                                     currentRoute?.startsWith("signup") == true ||
+                                    currentRoute?.startsWith("history") == true ||
+                                    currentRoute?.startsWith("profile") == true ||
+                                    currentRoute?.startsWith("topup") == true
+                            val blankBottom =
                                     currentRoute?.startsWith("schedule") == true ||
                                     currentRoute?.startsWith("seat_selection") == true ||
                                     currentRoute?.startsWith("payment") == true ||
-                                    currentRoute?.startsWith("ticket") == true ||
-                                    currentRoute?.startsWith("history") == true ||
-                                    currentRoute?.startsWith("profile") == true ||
-                                    currentRoute?.startsWith("topup") == true ||
-                                    currentRoute?.startsWith("sukses") == true
+                                    currentRoute?.startsWith("ticket") == true || currentRoute?.startsWith("sukses") == true
 
-                            if (!hideBottomBar) {
+                            if (blankBottom){
+                                BlankBottom()
+                            } else if(!hideBottomBar){
                                 BottomNavigationBar(navController)
                             }
+//                            if (!hideBottomBar) {
+//                                BottomNavigationBar(navController)
+//                            }
                         },
                         containerColor = BackgroundGray
                     ){ innerPadding ->
@@ -240,5 +232,19 @@ fun BottomNavigationBar(navController: NavHostController) {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun BlankHeader(){
+    Surface(color = PrimaryDark) {
+
+    }
+}
+
+@Composable
+fun BlankBottom(){
+    Surface(color = PrimaryDark) {
+
     }
 }

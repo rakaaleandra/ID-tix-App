@@ -63,7 +63,6 @@ class AuthViewModel : ViewModel() {
             val email = currentUser.email
             if (!email.isNullOrEmpty()) {
                 _authState.value = AuthState.Authenticated
-//                _user.value = User(email = email, balance = 100000)
                 viewModelScope.launch {
                     try {
                         val response = LaravelApi.api.checkUser(EmailRequest(email))
@@ -193,6 +192,7 @@ class AuthViewModel : ViewModel() {
         auth.signOut()
         _authState.value = AuthState.UnAuthenticated
         _bookingHistory.value = emptyList() // Clear booking history on logout
+        _user.value = User(email = "", balance = 0)
     }
 
     fun updateUserEmail(email: String) {

@@ -30,23 +30,16 @@ import java.util.*
 
 @Composable
 fun TicketPage(
-//    filmId: Int,
-//    theaterName: String,
-//    showtime: String,
-//    totalPrice: Int,
     codePemesanan : String,
     authViewModel: AuthViewModel,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-//    val film = filmList.find { it.id == filmId } ?: filmList[0]
-//    val theater = theaterList.find { it.id == theaterId } ?: theaterList[0]
     val bookingHistory by authViewModel.bookingHistory.observeAsState(emptyList())
     val selectedBooking = bookingHistory.find { it.codePemesanan == codePemesanan }
 
     // Format currency to Rupiah
     if (selectedBooking == null) {
-        // Fallback: Loading atau error
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
